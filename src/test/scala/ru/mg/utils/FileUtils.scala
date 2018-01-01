@@ -13,7 +13,10 @@ object FileUtils {
     tempFile.deleteOnExit()
 
     val writer = new PrintWriter(tempFile)
-    fileLines.foreach(l => writer.write(l))
+    fileLines.foreach(
+      l => writer.write(s"$l\n")
+    )
+    writer.flush()
     writer.close()
 
     tempFile
