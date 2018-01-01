@@ -1,9 +1,9 @@
 package ru.mg
 
 import com.typesafe.scalalogging.LazyLogging
-import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.apache.flink.api.scala._
-import ru.mg.payment.{Payment, Person}
+import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
+import ru.mg.csv.CsvStreamBuilder
 
 object Main extends LazyLogging {
   def main(args: Array[String]): Unit = {
@@ -11,23 +11,19 @@ object Main extends LazyLogging {
 
     val env = StreamExecutionEnvironment.getExecutionEnvironment
 
-    val socketStream = env.fromElements(
-      Payment(
-        from = Person("Mike"),
-        to = Person("Elly"),
-        amount = 100
-      ),
-      Payment(
-        from = Person("Jack"),
-        to = Person("Mike"),
-        amount = 150
-      )
-    )
+    val csvStreamBuilder = new CsvStreamBuilder("data/payments.csv")
 
-    socketStream
-      .addSink(s => logger.info(s"$s"))
+    val stringInfo = createTypeInformation[String]
+    val longInfo = createTypeInformation[Long]
+    val input = csvStreamBuilder.build(env, Array(
+      stringInfo,
+      stringInfo,
+      longInfo
+    ))
 
-    env.execute("Socket reader")
+    input.addSink(s => logger.info(s"$s"))
+
+    env.execute("CSV reader")
 
     logger.info("Done")
 
