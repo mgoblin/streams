@@ -43,6 +43,7 @@ dependencies {
 
     // Use Scalatest for testing our library
     testCompile "org.scalatest:scalatest_$scalaMajor:3.0.4"
+    testCompile "junit:junit:4.12"
 
     // Need scala-xml at test runtime
     testRuntime "org.scala-lang.modules:scala-xml_$scalaMajor:1.0.6"
