@@ -18,7 +18,8 @@ object PaymentsStream {
       Array(
         stringInfo,
         stringInfo,
-        longInfo
+        longInfo,
+        stringInfo
       )
     ).map(row => Payment.convertFrom(row))
   }
