@@ -21,6 +21,6 @@ object PaymentsStream {
         longInfo,
         stringInfo
       )
-    ).map(row => Payment.convertFrom(row))
+    ).map(row => row.as[Payment])
   }
 }

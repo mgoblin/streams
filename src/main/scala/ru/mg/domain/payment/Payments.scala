@@ -22,7 +22,7 @@ object Payments extends LazyLogging {
       require(row.getArity == 4, s"Row arity ${row.getArity} should be 4")
       require(row.getField(0).isInstanceOf[String], "Row field(0) should be String")
       require(row.getField(1).isInstanceOf[String], "Row field(1) should be String")
-      require(row.getField(2).isInstanceOf[Long], "Row field(2) should be Long")
+      require(row.getField(2).isInstanceOf[Number], "Row field(2) should be Long number")
       require(row.getField(3).isInstanceOf[String], "Row field(3) should be String")
 
       val payment = Payment(
@@ -37,8 +37,8 @@ object Payments extends LazyLogging {
     }
   }
 
-  implicit class ConverterUtil[P](p: P) {
-    def convertFrom[P](row: Row)(implicit evidence: Converter[P]): P = implicitly[Converter[P]].convert(row)
+  implicit class ConverterUtil(row: Row) {
+    def as[P](implicit evidence: Converter[P]): P = implicitly[Converter[P]].convert(row)
   }
 
 }
