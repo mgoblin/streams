@@ -7,7 +7,7 @@ import ru.mg.domain.fraud.{Fraud, FraudDetector}
 import ru.mg.domain.payment.{Payment, Person}
 import org.apache.flink.api.scala._
 
-class FrequentOutgoings extends FraudDetector {
+class FrequentOutgoings(val windowSizeMs: Int, val slideMs: Int, val threshold: Int) extends FraudDetector with Serializable {
 
   private val aggregatePayments = new AggregateFunction[Payment, Fraud, Fraud] {
 
@@ -28,7 +28,7 @@ class FrequentOutgoings extends FraudDetector {
   override def analyze(dataStream: DataStream[Payment]): DataStream[Fraud] =
     dataStream
       .keyBy(_.from.name)
-      .timeWindow(Time.seconds(10), Time.seconds(3))
+      .timeWindow(Time.milliseconds(windowSizeMs), Time.milliseconds(slideMs))
       .aggregate(aggregatePayments)
-      .filter(_.payments.lengthCompare(3) > 0)
+      .filter(_.payments.lengthCompare(threshold) > 0)
 }

@@ -8,5 +8,5 @@ trait FraudDetector {
 }
 
 object FraudDetector {
-  type FraudDetector = DataStream[Payment] => DataStream[Fraud]
+  type FraudDetectorFunction = DataStream[Payment] => DataStream[Fraud]
 }
