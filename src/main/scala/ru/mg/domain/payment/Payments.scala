@@ -1,4 +1,4 @@
-package ru.mg.payment
+package ru.mg.domain.payment
 
 import java.text.SimpleDateFormat
 

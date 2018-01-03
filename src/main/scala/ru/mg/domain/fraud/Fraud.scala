@@ -1,5 +1,5 @@
-package ru.mg.fraud
+package ru.mg.domain.fraud
 
-import ru.mg.payment.{Payment, Person}
+import ru.mg.domain.payment.{Payment, Person}
 
 case class Fraud(person: Person, payments: Seq[Payment], description: String)
