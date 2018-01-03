@@ -11,7 +11,7 @@ object Main extends LazyLogging {
     logger.info("Starting")
 
     val env = StreamExecutionEnvironment.getExecutionEnvironment
-    env.setStreamTimeCharacteristic(TimeCharacteristic.IngestionTime)
+    env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
 
     val input = PaymentsStream(env, "data/payments.csv")
 

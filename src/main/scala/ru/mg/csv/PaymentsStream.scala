@@ -21,6 +21,8 @@ object PaymentsStream {
         longInfo,
         stringInfo
       )
-    ).map(row => row.as[Payment])
+    )
+    .map(row => row.as[Payment])
+    .assignAscendingTimestamps(_.date.getTime)
   }
 }
