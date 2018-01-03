@@ -29,7 +29,9 @@ object Payments extends LazyLogging {
         Person(row.getField(0).asInstanceOf[String]),
         Person(row.getField(1).asInstanceOf[String]),
         row.getField(2).asInstanceOf[Long],
-        formatter.parse(row.getField(3).asInstanceOf[String])
+        synchronized {
+          formatter.parse(row.getField(3).asInstanceOf[String])
+        }
       )
 
       logger.debug(s"Row $row converted to payment $payment")
