@@ -1,12 +1,12 @@
-package ru.mg.csv
+package ru.mg.streams
 
 import org.apache.flink.api.scala.createTypeInformation
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
+import ru.mg.csv.CsvStreamBuilder
 import ru.mg.domain.payment.Payment
-
 import ru.mg.domain.payment.Payments._
 
-object PaymentsStream {
+object CsvFilePaymentsStream {
   def apply(env: StreamExecutionEnvironment, filePath: String): DataStream[Payment] ={
     val csvStreamBuilder = new CsvStreamBuilder(filePath)
 

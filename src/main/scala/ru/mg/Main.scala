@@ -3,8 +3,8 @@ package ru.mg
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
-import ru.mg.csv.PaymentsStream
 import ru.mg.detectors.Detectors._
+import ru.mg.streams.CsvFilePaymentsStream
 
 object Main extends LazyLogging {
   def main(args: Array[String]): Unit = {
@@ -13,7 +13,7 @@ object Main extends LazyLogging {
     val env = StreamExecutionEnvironment.getExecutionEnvironment
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
 
-    val input = PaymentsStream(env, "data/payments.csv")
+    val input = CsvFilePaymentsStream(env, "data/payments.csv")
 
     frequentOutgoings(input)
       .addSink(s => logger.info(s"$s"))

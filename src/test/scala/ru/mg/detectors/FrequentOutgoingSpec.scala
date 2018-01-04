@@ -9,10 +9,10 @@ import org.apache.flink.streaming.api.windowing.time.Time
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{FlatSpec, Matchers}
-import ru.mg.csv.PaymentsStream
 import ru.mg.detectors.Detectors._
 import ru.mg.domain.fraud.Fraud
 import ru.mg.domain.payment.{Payment, Person}
+import ru.mg.streams.CsvFilePaymentsStream
 import ru.mg.utils.{FileUtils, SinkCollector}
 
 @RunWith(classOf[JUnitRunner])
@@ -23,7 +23,7 @@ class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
     val env = StreamExecutionEnvironment.createLocalEnvironment(parallelism = 1)
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
 
-    val input = PaymentsStream(env, tempFile.getAbsolutePath)
+    val input = CsvFilePaymentsStream(env, tempFile.getAbsolutePath)
 
     SinkCollector.clear()
     val collector = SinkCollector[Fraud]
@@ -55,7 +55,7 @@ class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
     val env = StreamExecutionEnvironment.createLocalEnvironment(parallelism = 1)
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
 
-    val input = PaymentsStream(env, tempFile.getAbsolutePath)
+    val input = CsvFilePaymentsStream(env, tempFile.getAbsolutePath)
 
     SinkCollector.clear()
     val collector = SinkCollector[Fraud]
@@ -76,7 +76,7 @@ class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
     val env = StreamExecutionEnvironment.createLocalEnvironment(parallelism = 1)
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
 
-    val input = PaymentsStream(env, tempFile.getAbsolutePath)
+    val input = CsvFilePaymentsStream(env, tempFile.getAbsolutePath)
 
     SinkCollector.clear()
     val collector = SinkCollector[Fraud]
