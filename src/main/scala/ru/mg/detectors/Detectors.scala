@@ -1,18 +1,16 @@
 package ru.mg.detectors
 
 import org.apache.flink.streaming.api.scala.DataStream
-import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows
-import org.apache.flink.streaming.api.windowing.time.Time
-import ru.mg.domain.fraud.FraudDetector.FraudDetectorFunction
-import ru.mg.domain.payment.Payment
+import ru.mg.domain.fraud.Fraud
+import ru.mg.streams._
+import org.apache.flink.api.scala._
 
 object Detectors {
 
-  def frequentOutgoings(aggregateWindow: SlidingEventTimeWindows, threshold: Int): FraudDetectorFunction = {
-    dataStream: DataStream[Payment] => new FrequentOutgoings(aggregateWindow, threshold).analyze(dataStream)
+  def frequentOutgoings(threshold: Int): DataStream[OutgoingPayments] => DataStream[Fraud] = {
+    dataStream: DataStream[OutgoingPayments] =>
+      dataStream
+        .filter(op => op.lengthCompare(threshold) > 0)
+        .map(payments => Fraud(payments.head.from, payments, "frequent outgoing payments"))
   }
-
-  val frequentOutgoings: FraudDetectorFunction = frequentOutgoings(
-    SlidingEventTimeWindows.of(Time.minutes(1), Time.seconds(15)), 3
-  )
 }
