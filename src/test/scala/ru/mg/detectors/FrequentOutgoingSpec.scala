@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat
 
 import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
+import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows
+import org.apache.flink.streaming.api.windowing.time.Time
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{FlatSpec, Matchers}
@@ -26,7 +28,7 @@ class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
     SinkCollector.clear()
     val collector = SinkCollector[Fraud]
 
-    val fraud = frequentOutgoings(1000, 500, 0)(input)
+    val fraud = frequentOutgoings(SlidingEventTimeWindows.of(Time.seconds(1),Time.milliseconds(500)), 0)(input)
 
     fraud.addSink(f => collector.add(f))
 
@@ -58,7 +60,7 @@ class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
     SinkCollector.clear()
     val collector = SinkCollector[Fraud]
 
-    val fraud = frequentOutgoings(1000, 500, 1)(input)
+    val fraud = frequentOutgoings(SlidingEventTimeWindows.of(Time.seconds(1),Time.milliseconds(500)), 1)(input)
 
     fraud.addSink(f => collector.add(f))
 
@@ -79,7 +81,7 @@ class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
     SinkCollector.clear()
     val collector = SinkCollector[Fraud]
 
-    val fraud = frequentOutgoings(10000, 8000, 1)(input)
+    val fraud = frequentOutgoings(SlidingEventTimeWindows.of(Time.seconds(10),Time.seconds(8)), 1)(input)
 
     fraud.addSink(f => collector.add(f))
 
