@@ -2,38 +2,26 @@ package ru.mg.detectors
 
 import java.text.SimpleDateFormat
 
-import org.apache.flink.api.scala._
+import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
 import org.junit.runner.RunWith
-import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.junit.JUnitRunner
-import ru.mg.csv.CsvStreamBuilder
+import org.scalatest.{FlatSpec, Matchers}
+import ru.mg.csv.PaymentsStream
+import ru.mg.detectors.Detectors._
+import ru.mg.domain.fraud.Fraud
 import ru.mg.domain.payment.{Payment, Person}
 import ru.mg.utils.{FileUtils, SinkCollector}
-import ru.mg.domain.payment.Payments._
-import Detectors._
-import org.apache.flink.streaming.api.TimeCharacteristic
-import ru.mg.domain.fraud.Fraud
 
 @RunWith(classOf[JUnitRunner])
 class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
   "frequent outgoing detector" should "search payments from person in sliding window" in {
     val tempFile = FileUtils.createTempFile("payments.csv")
-    val csvStreamBuilder = new CsvStreamBuilder(tempFile.getAbsolutePath)
 
     val env = StreamExecutionEnvironment.createLocalEnvironment(parallelism = 1)
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
 
-    val stringInfo = createTypeInformation[String]
-    val longInfo = createTypeInformation[Long]
-
-    val input = csvStreamBuilder.build(env, Array(
-      stringInfo,
-      stringInfo,
-      longInfo,
-      stringInfo
-    )).map(row => row.as[Payment])
-      .assignAscendingTimestamps(_.date.getTime)
+    val input = PaymentsStream(env, tempFile.getAbsolutePath)
 
     SinkCollector.clear()
     val collector = SinkCollector[Fraud]

@@ -49,7 +49,7 @@ class CsvStreamBuilderSpec extends FlatSpec with Matchers with LazyLogging with 
     ))
 
     SinkCollector.clear()
-    val sinkCollector = SinkCollector[Row]()
+    val sinkCollector = SinkCollector[Row]
 
     input.addSink(e => sinkCollector.add(e))
 
