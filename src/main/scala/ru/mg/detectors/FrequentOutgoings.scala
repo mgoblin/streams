@@ -11,7 +11,7 @@ class FrequentOutgoings(val windowSizeMs: Int, val slideMs: Int, val threshold: 
 
   private val aggregatePayments = new AggregateFunction[Payment, Fraud, Fraud] {
 
-    override def createAccumulator(): Fraud = Fraud(Person(""), Seq.empty, "dumb")
+    override def createAccumulator(): Fraud = Fraud(Person(""), Seq.empty, name)
 
     override def add(value: Payment, accumulator: Fraud): Fraud =
       accumulator
@@ -24,6 +24,8 @@ class FrequentOutgoings(val windowSizeMs: Int, val slideMs: Int, val threshold: 
 
     override def merge(a: Fraud, b: Fraud): Fraud = a.copy(payments = a.payments ++ b.payments )
   }
+
+  override def name: String = "frequent outgoing payments"
 
   override def analyze(dataStream: DataStream[Payment]): DataStream[Fraud] =
     dataStream

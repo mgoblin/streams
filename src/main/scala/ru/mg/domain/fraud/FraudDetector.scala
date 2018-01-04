@@ -4,6 +4,7 @@ import org.apache.flink.streaming.api.scala.DataStream
 import ru.mg.domain.payment.Payment
 
 trait FraudDetector {
+  def name: String
   def analyze(dataStream: DataStream[Payment]): DataStream[Fraud]
 }
 

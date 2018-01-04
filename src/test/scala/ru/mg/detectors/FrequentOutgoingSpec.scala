@@ -39,10 +39,10 @@ class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
     val date2 = sdf.parse("2018-01-01 12:19:01.000")
 
     SinkCollector.collector should contain theSameElementsAs Seq(
-      Fraud(Person("Mike"), Seq(Payment(Person("Mike"), Person("Elly"), 100, date1)), "dumb"),
-      Fraud(Person("Mike"), Seq(Payment(Person("Mike"), Person("Elly"), 100, date1)), "dumb"),
-      Fraud(Person("Jack"), Seq(Payment(Person("Jack"), Person("Mike"), 150, date2)), "dumb"),
-      Fraud(Person("Jack"), Seq(Payment(Person("Jack"), Person("Mike"), 150, date2)), "dumb")
+      Fraud(Person("Mike"), Seq(Payment(Person("Mike"), Person("Elly"), 100, date1)), "frequent outgoing payments"),
+      Fraud(Person("Mike"), Seq(Payment(Person("Mike"), Person("Elly"), 100, date1)), "frequent outgoing payments"),
+      Fraud(Person("Jack"), Seq(Payment(Person("Jack"), Person("Mike"), 150, date2)), "frequent outgoing payments"),
+      Fraud(Person("Jack"), Seq(Payment(Person("Jack"), Person("Mike"), 150, date2)), "frequent outgoing payments")
     )
 
   }
@@ -98,7 +98,7 @@ class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
           Payment(Person("Mike"), Person("Elly"), 100, date1),
           Payment(Person("Mike"), Person("Alice"), 120, date2)
         ),
-        "dumb"
+        "frequent outgoing payments"
       )
     )
 
