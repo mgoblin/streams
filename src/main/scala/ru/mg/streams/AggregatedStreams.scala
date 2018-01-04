@@ -10,7 +10,7 @@ object AggregatedStreams {
 
   private val aggregatePayments = new PaymentAggregator
 
-  def groupOutgoings(aggregationWindow: SlidingEventTimeWindows): OutgoingGroupedStream =
+  private def groupOutgoings(aggregationWindow: SlidingEventTimeWindows): OutgoingGroupedStream =
     (dataStream: DataStream[Payment]) => dataStream
       .keyBy(_.from.name)
       .window(aggregationWindow)

@@ -7,7 +7,7 @@ import org.apache.flink.api.scala._
 
 object Detectors {
 
-  def frequentOutgoings(threshold: Int): DataStream[OutgoingPaymentsGroup] => DataStream[Fraud] = {
+  private def frequentOutgoings(threshold: Int): DataStream[OutgoingPaymentsGroup] => DataStream[Fraud] = {
     dataStream: DataStream[OutgoingPaymentsGroup] =>
       dataStream
         .filter(op => op.lengthCompare(threshold) > 0)

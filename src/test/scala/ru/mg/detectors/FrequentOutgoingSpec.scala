@@ -12,9 +12,10 @@ import org.scalatest.{FlatSpec, Matchers}
 import ru.mg.detectors.Detectors._
 import ru.mg.domain.fraud.Fraud
 import ru.mg.domain.payment.{Payment, Person}
-import ru.mg.streams.AggregatedStreams.groupOutgoings
+import ru.mg.streams.AggregatedStreams._
 import ru.mg.streams.CsvFilePaymentsStream
 import ru.mg.utils.{FileUtils, SinkCollector}
+
 
 @RunWith(classOf[JUnitRunner])
 class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
@@ -25,14 +26,14 @@ class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
 
     val input = CsvFilePaymentsStream(env, tempFile.getAbsolutePath)
-    val groupByOutgoings = groupOutgoings(SlidingEventTimeWindows.of(Time.seconds(1), Time.milliseconds(500)))
 
     SinkCollector.clear()
     val collector = SinkCollector[Fraud]
 
-    val fraud = frequentOutgoings(0)(groupByOutgoings(input))
-
-    fraud.addSink(f => collector.add(f))
+    input
+      .groupByOutgoings(SlidingEventTimeWindows.of(Time.seconds(1), Time.milliseconds(500)))
+      .findFrequentOutgoingsFraud(0)
+      .addSink(f => collector.add(f))
 
     env.execute()
 
@@ -57,15 +58,14 @@ class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
     val env = StreamExecutionEnvironment.createLocalEnvironment(parallelism = 1)
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
 
-    val input = CsvFilePaymentsStream(env, tempFile.getAbsolutePath)
-    val groupByOutgoings = groupOutgoings(SlidingEventTimeWindows.of(Time.seconds(1), Time.milliseconds(500)))
-
     SinkCollector.clear()
     val collector = SinkCollector[Fraud]
 
-    val fraud = frequentOutgoings(1)(groupByOutgoings(input))
-
-    fraud.addSink(f => collector.add(f))
+    val input = CsvFilePaymentsStream(env, tempFile.getAbsolutePath)
+    input
+      .groupByOutgoings(SlidingEventTimeWindows.of(Time.seconds(1), Time.milliseconds(500)))
+      .findFrequentOutgoingsFraud(1)
+      .addSink(f => collector.add(f))
 
     env.execute()
 
@@ -79,15 +79,14 @@ class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
     val env = StreamExecutionEnvironment.createLocalEnvironment(parallelism = 1)
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
 
-    val input = CsvFilePaymentsStream(env, tempFile.getAbsolutePath)
-    val groupByOutgoings = groupOutgoings(SlidingEventTimeWindows.of(Time.seconds(10), Time.seconds(8)))
-
     SinkCollector.clear()
     val collector = SinkCollector[Fraud]
 
-    val fraud = frequentOutgoings(1)(groupByOutgoings(input))
-
-    fraud.addSink(f => collector.add(f))
+    val input = CsvFilePaymentsStream(env, tempFile.getAbsolutePath)
+    input
+      .groupByOutgoings(SlidingEventTimeWindows.of(Time.seconds(10), Time.seconds(8)))
+      .findFrequentOutgoingsFraud(1)
+      .addSink(f => collector.add(f))
 
     env.execute()
 
