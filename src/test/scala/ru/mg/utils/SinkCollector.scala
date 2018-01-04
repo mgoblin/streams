@@ -4,7 +4,7 @@ import java.io.Serializable
 
 
 object SinkCollector extends Serializable {
-  def apply[T](): SinkCollector[T] = new SinkCollector[T]()
+  def apply[T]: SinkCollector[T] = new SinkCollector[T]()
   val collector: java.util.List[Any] = new java.util.concurrent.CopyOnWriteArrayList
   def clear(): Unit = collector.clear()
 }
