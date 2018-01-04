@@ -4,6 +4,6 @@ import org.apache.flink.streaming.api.scala.DataStream
 import ru.mg.domain.payment.Payment
 
 package object streams {
-  type OutgoingPayments = Seq[Payment]
-  type OutgoingGroupedStream = DataStream[Payment] => DataStream[OutgoingPayments]
+  type OutgoingPaymentsGroup = Seq[Payment]
+  type OutgoingGroupedStream = DataStream[Payment] => DataStream[OutgoingPaymentsGroup]
 }

@@ -17,9 +17,10 @@ object Main extends LazyLogging {
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
 
     val input = CsvFilePaymentsStream(env, "data/payments.csv")
-    val groupByOutgoings = groupOutgoings(SlidingEventTimeWindows.of(Time.minutes(1), Time.seconds(15)))
 
-    frequentOutgoings(3)(groupByOutgoings(input))
+    input
+      .groupByOutgoings(SlidingEventTimeWindows.of(Time.minutes(1), Time.seconds(15)))
+      .findFrequentOutgoingsFraud(3)
       .addSink(s => logger.info(s"$s"))
 
     env.execute("CSV reader")
