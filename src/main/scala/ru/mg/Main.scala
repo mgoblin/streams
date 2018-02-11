@@ -22,7 +22,7 @@ object Main extends LazyLogging {
     val paymentsStream: DataStream[Payment] = CsvFilePaymentsStream(env, "data/payments.csv")
 
     val tableEnv = TableEnvironment.getTableEnvironment(env)
-    val paymentsTable = tableEnv.fromDataStream(paymentsStream, 'from, 'to, 'amount)
+    val paymentsTable = tableEnv.fromDataStream(paymentsStream)
     tableEnv.registerTable("Payments", paymentsTable)
 
 
