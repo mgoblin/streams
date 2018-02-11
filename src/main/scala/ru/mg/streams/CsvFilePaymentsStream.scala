@@ -1,5 +1,7 @@
 package ru.mg.streams
 
+import java.time.ZoneId
+
 import org.apache.flink.api.scala.createTypeInformation
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
 import ru.mg.csv.CsvStreamBuilder
@@ -23,6 +25,6 @@ object CsvFilePaymentsStream {
       )
     )
     .map(row => row.as[Payment])
-    .assignAscendingTimestamps(_.date.getTime)
+    .assignAscendingTimestamps(_.date.atZone(ZoneId.systemDefault()).toInstant.toEpochMilli)
   }
 }

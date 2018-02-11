@@ -1,6 +1,7 @@
 package ru.mg.domain.payment
 
-import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.flink.types.Row
@@ -13,8 +14,8 @@ object Payments extends LazyLogging {
 
   implicit object PaymentConverter extends Converter[Payment] {
 
-    val dateTimeFormat = "yyyy-MM-dd HH:mm:ss.SSS"
-    val formatter = new SimpleDateFormat(dateTimeFormat)
+    private[this] val dateTimeFormat = "yyyy-MM-dd HH:mm:ss.SSS"
+    private[this] val formatter = DateTimeFormatter.ofPattern(dateTimeFormat)
 
     override def convert(row: Row): Payment = {
       logger.debug(s"Converting $row to payment")
@@ -29,9 +30,7 @@ object Payments extends LazyLogging {
         Person(row.getField(0).asInstanceOf[String]),
         Person(row.getField(1).asInstanceOf[String]),
         row.getField(2).asInstanceOf[Long],
-        synchronized {
-          formatter.parse(row.getField(3).asInstanceOf[String])
-        }
+        LocalDateTime.parse(row.getField(3).asInstanceOf[String], formatter)
       )
 
       logger.debug(s"Row $row converted to payment $payment")

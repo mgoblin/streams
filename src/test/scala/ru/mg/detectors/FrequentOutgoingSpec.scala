@@ -1,6 +1,7 @@
 package ru.mg.detectors
 
-import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
@@ -39,9 +40,9 @@ class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
 
     SinkCollector.collector should have size 4
 
-    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
-    val date1 = sdf.parse("2018-01-01 12:18:00.000")
-    val date2 = sdf.parse("2018-01-01 12:19:01.000")
+    val sdf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+    val date1 = LocalDateTime.parse("2018-01-01 12:18:00.000", sdf)
+    val date2 = LocalDateTime.parse("2018-01-01 12:19:01.000", sdf)
 
     SinkCollector.collector should contain theSameElementsAs Seq(
       Fraud(Person("Mike"), Seq(Payment(Person("Mike"), Person("Elly"), 100, date1)), "frequent outgoing payments"),
@@ -92,9 +93,9 @@ class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
 
     SinkCollector.collector should have size 1
 
-    val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
-    val date1 = sdf.parse("2018-01-01 12:19:00.000")
-    val date2 = sdf.parse("2018-01-01 12:19:03.000")
+    val sdf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+    val date1 = LocalDateTime.parse("2018-01-01 12:19:00.000", sdf)
+    val date2 = LocalDateTime.parse("2018-01-01 12:19:03.000", sdf)
 
     SinkCollector.collector should contain theSameElementsAs Seq(
       Fraud(
