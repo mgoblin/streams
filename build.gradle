@@ -21,7 +21,7 @@ version = "0.1.0"
 
 def scalaMajor = '2.11'
 def scalaVersion = "${scalaMajor}.12"
-def flinkVersion = "1.4.0"
+def flinkVersion = "1.4.1"
 
 targetCompatibility = 1.8
 
