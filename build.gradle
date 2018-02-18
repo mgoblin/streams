@@ -41,6 +41,8 @@ dependencies {
     compile "org.apache.flink:flink-core:$flinkVersion"
     compile "org.apache.flink:flink-streaming-scala_$scalaMajor:$flinkVersion"
     compile "org.apache.flink:flink-table_$scalaMajor:$flinkVersion"
+    compile "org.apache.flink:flink-queryable-state-runtime_$scalaMajor:$flinkVersion"
+
 
 
     // Use Scalatest for testing our library
