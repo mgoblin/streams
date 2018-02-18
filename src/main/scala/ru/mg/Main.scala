@@ -1,5 +1,6 @@
 package ru.mg
 
+
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.flink.streaming.api.TimeCharacteristic
 import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment, _}
@@ -28,13 +29,15 @@ object Main extends LazyLogging {
     val p = tableEnv.sqlQuery(
       """
         |SELECT
+        |  CURRENT_TIMESTAMP,
         |  fromPerson,
         |  SUM(amount) as total
         |FROM Payments
-        |group by fromPerson
+        |WHERE fromPerson.name = 'Mike'
+        |GROUP BY fromPerson
         |"""
         .stripMargin)
-      .toRetractStream[(Person, Long)]
+      .toRetractStream[(java.sql.Timestamp, Person, Long)]
       .addSink(s =>
         logger.info(s"table payments $s")
       )
