@@ -24,6 +24,11 @@
         <appender-ref ref="FILE" />
     </logger>
 
+    <logger name="org.apache.flink" level="info"
+            additivity="false">
+        <appender-ref ref="FILE" />
+    </logger>
+
     <root level="warn">
         <appender-ref ref="FILE" />
     </root>
