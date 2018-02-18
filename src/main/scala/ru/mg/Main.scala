@@ -29,15 +29,14 @@ object Main extends LazyLogging {
     val p = tableEnv.sqlQuery(
       """
         |SELECT
-        |  CURRENT_TIMESTAMP,
-        |  fromPerson,
-        |  SUM(amount) as total
+        |  toPerson,
+        |  COUNT(1) as incomingPaymentsCount,
+        |  SUM(amount) as totalIncoming
         |FROM Payments
-        |WHERE fromPerson.name = 'Mike'
-        |GROUP BY fromPerson
+        |GROUP BY toPerson
         |"""
         .stripMargin)
-      .toRetractStream[(java.sql.Timestamp, Person, Long)]
+      .toRetractStream[(Person, Long, Long)]
       .addSink(s =>
         logger.info(s"table payments $s")
       )
