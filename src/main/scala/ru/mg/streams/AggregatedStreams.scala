@@ -12,7 +12,7 @@ object AggregatedStreams {
 
   private def groupOutgoings(aggregationWindow: SlidingEventTimeWindows): OutgoingGroupedStream =
     (dataStream: DataStream[Payment]) => dataStream
-      .keyBy(_.from.name)
+      .keyBy(_.fromPerson.name)
       .window(aggregationWindow)
       .aggregate(aggregatePayments)
 

@@ -2,15 +2,15 @@ package ru.mg
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.flink.streaming.api.TimeCharacteristic
-import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment}
+import org.apache.flink.streaming.api.scala.{DataStream, StreamExecutionEnvironment, _}
 import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows
 import org.apache.flink.streaming.api.windowing.time.Time
 import org.apache.flink.table.api.TableEnvironment
 import org.apache.flink.table.api.scala._
 import ru.mg.detectors.Detectors._
-import ru.mg.domain.payment.Payment
-import ru.mg.streams._
+import ru.mg.domain.payment.{Payment, Person}
 import ru.mg.streams.AggregatedStreams._
+import ru.mg.streams._
 
 object Main extends LazyLogging {
   def main(args: Array[String]): Unit = {
@@ -24,6 +24,21 @@ object Main extends LazyLogging {
     val tableEnv = TableEnvironment.getTableEnvironment(env)
     val paymentsTable = tableEnv.fromDataStream(paymentsStream)
     tableEnv.registerTable("Payments", paymentsTable)
+
+    val p = tableEnv.sqlQuery(
+      """
+        |SELECT
+        |  fromPerson,
+        |  SUM(amount) as total
+        |FROM Payments
+        |group by fromPerson
+        |"""
+        .stripMargin)
+      .toRetractStream[(Person, Long)]
+      .addSink(s =>
+        logger.info(s"table payments $s")
+      )
+
 
 
     paymentsStream

@@ -25,6 +25,6 @@ object CsvFilePaymentsStream {
       )
     )
     .map(row => row.as[Payment])
-    .assignAscendingTimestamps(_.date.atZone(ZoneId.systemDefault()).toInstant.toEpochMilli)
+    .assignAscendingTimestamps(_.paymentDate.atZone(ZoneId.systemDefault()).toInstant.toEpochMilli)
   }
 }

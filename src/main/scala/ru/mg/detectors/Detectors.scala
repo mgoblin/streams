@@ -11,7 +11,7 @@ object Detectors {
     dataStream: DataStream[OutgoingPaymentsGroup] =>
       dataStream
         .filter(op => op.lengthCompare(threshold) > 0)
-        .map(payments => Fraud(payments.head.from, payments, "frequent outgoing payments"))
+        .map(payments => Fraud(payments.head.fromPerson, payments, "frequent outgoing payments"))
   }
 
   implicit class FreqUtils(stream: DataStream[OutgoingPaymentsGroup]) {
