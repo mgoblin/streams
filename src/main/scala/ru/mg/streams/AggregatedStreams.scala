@@ -14,9 +14,9 @@ object AggregatedStreams {
       .window(aggregationWindow)
       .aggregate(SeqAggregator[Payment])
 
-  implicit class InputMixUtils(i: DataStream[Payment]) {
-    def groupByOutgoings(aggregationWindow: SlidingEventTimeWindows): DataStream[OutgoingPaymentsGroup] =
-      groupOutgoings(aggregationWindow)(i)
+  implicit class InputMixUtils(stream: DataStream[Payment]) {
+    def groupByPersonOutgoings(aggregationWindow: SlidingEventTimeWindows): DataStream[OutgoingPaymentsGroup] =
+      groupOutgoings(aggregationWindow)(stream)
   }
 
 }

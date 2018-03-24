@@ -44,7 +44,7 @@ object Main extends LazyLogging {
 
 
     paymentsStream
-      .groupByOutgoings(SlidingEventTimeWindows.of(Time.minutes(1), Time.seconds(15)))
+      .groupByPersonOutgoings(SlidingEventTimeWindows.of(Time.minutes(1), Time.seconds(15)))
       .findFrequentOutgoingsFraud(3)
       .addSink(s => logger.info(s"$s"))
 

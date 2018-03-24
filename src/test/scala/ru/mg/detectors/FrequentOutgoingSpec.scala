@@ -32,7 +32,7 @@ class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
     val collector = SinkCollector[Fraud]
 
     input
-      .groupByOutgoings(SlidingEventTimeWindows.of(Time.seconds(1), Time.milliseconds(500)))
+      .groupByPersonOutgoings(SlidingEventTimeWindows.of(Time.seconds(1), Time.milliseconds(500)))
       .findFrequentOutgoingsFraud(0)
       .addSink(f => collector.add(f))
 
@@ -64,7 +64,7 @@ class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
 
     val input = CsvFilePaymentsStream(env, tempFile.getAbsolutePath)
     input
-      .groupByOutgoings(SlidingEventTimeWindows.of(Time.seconds(1), Time.milliseconds(500)))
+      .groupByPersonOutgoings(SlidingEventTimeWindows.of(Time.seconds(1), Time.milliseconds(500)))
       .findFrequentOutgoingsFraud(1)
       .addSink(f => collector.add(f))
 
@@ -85,7 +85,7 @@ class FrequentOutgoingSpec extends FlatSpec with Serializable with Matchers {
 
     val input = CsvFilePaymentsStream(env, tempFile.getAbsolutePath)
     input
-      .groupByOutgoings(SlidingEventTimeWindows.of(Time.seconds(10), Time.seconds(8)))
+      .groupByPersonOutgoings(SlidingEventTimeWindows.of(Time.seconds(10), Time.seconds(8)))
       .findFrequentOutgoingsFraud(1)
       .addSink(f => collector.add(f))
 
