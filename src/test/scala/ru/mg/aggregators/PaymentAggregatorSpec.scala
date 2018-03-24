@@ -8,7 +8,7 @@ import ru.mg.domain.payment.{Payment, Person}
 
 class PaymentAggregatorSpec extends FlatSpec with Matchers with LazyLogging {
 
-  val aggregator = new PaymentAggregator
+  val aggregator = new SeqAggregator[Payment]
 
   val payment = Payment(
     fromPerson = Person("A"),
