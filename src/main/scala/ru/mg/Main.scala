@@ -10,7 +10,6 @@ import org.apache.flink.table.api.TableEnvironment
 import org.apache.flink.table.api.scala._
 import ru.mg.detectors.Detectors._
 import ru.mg.domain.payment.{Payment, Person}
-import ru.mg.streams.AggregatedStreams._
 import ru.mg.streams._
 
 object Main extends LazyLogging {

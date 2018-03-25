@@ -8,15 +8,10 @@ import ru.mg.domain.payment.Payment
 
 object AggregatedStreams {
 
-  private def groupOutgoings(aggregationWindow: SlidingEventTimeWindows): OutgoingGroupedStream =
+  private[streams] def groupOutgoings(aggregationWindow: SlidingEventTimeWindows): OutgoingGroupedStream =
     (dataStream: DataStream[Payment]) => dataStream
       .keyBy(_.fromPerson.name)
       .window(aggregationWindow)
       .aggregate(SeqAggregator[Payment])
-
-  implicit class InputMixUtils(stream: DataStream[Payment]) {
-    def groupByPersonOutgoings(aggregationWindow: SlidingEventTimeWindows): DataStream[OutgoingPaymentsGroup] =
-      groupOutgoings(aggregationWindow)(stream)
-  }
 
 }
