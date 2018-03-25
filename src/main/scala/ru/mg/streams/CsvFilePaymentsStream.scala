@@ -9,8 +9,8 @@ import ru.mg.domain.payment.Payment
 import ru.mg.domain.payment.Payments._
 
 object CsvFilePaymentsStream {
-  def apply(env: StreamExecutionEnvironment, filePath: String): DataStream[Payment] ={
-    val csvStreamBuilder = new CsvStreamBuilder(filePath)
+  def apply(env: StreamExecutionEnvironment, fileName: String): DataStream[Payment] ={
+    val csvStreamBuilder = new CsvStreamBuilder(fileName)
 
     val stringInfo = createTypeInformation[String]
     val longInfo = createTypeInformation[Long]
