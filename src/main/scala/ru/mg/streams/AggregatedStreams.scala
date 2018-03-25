@@ -8,7 +8,7 @@ import ru.mg.domain.payment.Payment
 
 object AggregatedStreams {
 
-  private[streams] def groupOutgoings(aggregationWindow: SlidingEventTimeWindows): OutgoingGroupedStream =
+  def groupOutgoings(aggregationWindow: SlidingEventTimeWindows): OutgoingGroupedStream =
     (dataStream: DataStream[Payment]) => dataStream
       .keyBy(_.fromPerson.name)
       .window(aggregationWindow)

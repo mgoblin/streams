@@ -4,12 +4,11 @@ import java.time.{LocalDateTime, ZoneId}
 
 import com.typesafe.scalalogging.LazyLogging
 import org.apache.flink.streaming.api.TimeCharacteristic
-import org.apache.flink.streaming.api.scala.StreamExecutionEnvironment
+import org.apache.flink.streaming.api.scala.{StreamExecutionEnvironment, _}
 import org.apache.flink.streaming.api.windowing.assigners.SlidingEventTimeWindows
 import org.apache.flink.streaming.api.windowing.time.Time
 import org.scalatest.{FlatSpec, Matchers, PrivateMethodTester}
 import ru.mg.domain.payment.{Payment, Person}
-import org.apache.flink.streaming.api.scala._
 import ru.mg.utils.SinkCollector
 
 class AggregatedStreamsSpec extends FlatSpec with Matchers with LazyLogging with PrivateMethodTester {
@@ -27,9 +26,7 @@ class AggregatedStreamsSpec extends FlatSpec with Matchers with LazyLogging with
         .fromCollection(payments)
         .assignAscendingTimestamps(_.paymentDate.atZone(ZoneId.systemDefault()).toInstant.toEpochMilli)
 
-    val decoratedGroupOutgoings = PrivateMethod[OutgoingGroupedStream]('groupOutgoings)
-
-    val flowBuilder = AggregatedStreams invokePrivate decoratedGroupOutgoings(
+    val flowBuilder = AggregatedStreams.groupOutgoings(
       SlidingEventTimeWindows.of(Time.seconds(2), Time.seconds(1))
     )
 
@@ -47,8 +44,6 @@ class AggregatedStreamsSpec extends FlatSpec with Matchers with LazyLogging with
   }
 
   it should "mix groupByPersonOutgoings like flink operator to person payments stream" in {
-
-    import AggregatedStreams._
 
     val env = StreamExecutionEnvironment.createLocalEnvironment()
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)

@@ -10,12 +10,12 @@ import org.apache.flink.streaming.api.windowing.time.Time
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.{FlatSpec, Matchers}
-import ru.mg.detectors.Detectors._
 import ru.mg.domain.fraud.Fraud
 import ru.mg.domain.payment.{Payment, Person}
-import ru.mg.streams.AggregatedStreams._
-import ru.mg.streams.CsvFilePaymentsStream
 import ru.mg.utils.{FileUtils, SinkCollector}
+
+import ru.mg.streams._
+import ru.mg.detectors.Detectors._
 
 
 @RunWith(classOf[JUnitRunner])

@@ -7,6 +7,7 @@ import ru.mg.streams.AggregatedStreams._
 
 package object streams {
   type OutgoingPaymentsGroup = Seq[Payment]
+  type IncomingPaymentsGroup = Seq[Payment]
   type OutgoingGroupedStream = DataStream[Payment] => DataStream[OutgoingPaymentsGroup]
 
   implicit class EnvMix(env: StreamExecutionEnvironment) {
