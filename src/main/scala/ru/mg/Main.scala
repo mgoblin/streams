@@ -17,11 +17,11 @@ object Main extends LazyLogging {
     logger.info("Starting")
 
     val env = StreamExecutionEnvironment.getExecutionEnvironment
+    val tableEnv = TableEnvironment.getTableEnvironment(env)
     env.setStreamTimeCharacteristic(TimeCharacteristic.EventTime)
 
-    val paymentsStream: DataStream[Payment] = env.fromPaymentsCsv("data/payments.csv")
 
-    val tableEnv = TableEnvironment.getTableEnvironment(env)
+    val paymentsStream: DataStream[Payment] = env.fromPaymentsCsv("data/payments.csv")
     val paymentsTable = tableEnv.fromDataStream(paymentsStream)
     tableEnv.registerTable("Payments", paymentsTable)
 
